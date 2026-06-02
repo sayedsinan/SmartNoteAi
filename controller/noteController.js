@@ -46,5 +46,17 @@ noteController.updateNote = (req, res) => {
         res.json({ message: 'Note updated' });
     });
 };
+noteController.deleteNote = (req, res) => {   
+    const { id } = req.params;
+    noteService.deleteNote(id, (err, affectedRows) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to delete note' });
+        }
+        if (affectedRows === 0) {
+            return res.status(404).json({ error: 'Note not found' });
+        }
+        res.json({ message: 'Note deleted' });
+    });
+};
 
 module.exports = noteController;

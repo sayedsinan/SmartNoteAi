@@ -6,6 +6,8 @@ app.use(express.json());
 
 require('./database/db');
 
+app.use('/api', require('./route/notesRouter'));
+
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 });
