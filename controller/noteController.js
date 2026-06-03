@@ -58,10 +58,7 @@ noteController.deleteNote = (req, res) => {
         }
         res.json({ message: 'Note deleted' });
     });
-};
-noteController.generateNote = async (req, res) => {
-    try {
-noteController.generateNote = async (req, res) => {
+};noteController.generateNote = async (req, res) => {
     try {
         const { notes } = req.body;
 
@@ -105,12 +102,3 @@ noteController.generateNote = async (req, res) => {
 };
 
 module.exports = noteController;
-    } catch (error) {
-        console.error("Generate Study Material Error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-}
