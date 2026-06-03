@@ -29,7 +29,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>📚 Smart Note AI</h1>
+      <h1>📚 Smart  AI</h1>
 
       <textarea
         placeholder="Enter your notes..."
