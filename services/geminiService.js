@@ -32,7 +32,8 @@ ${notes}
         model: "gemini-3.1-flash-lite",
         contents: prompt
     });
-
+    console.log("RESULT:", response);
+console.log("TYPE:", typeof response);
     return response.text;
 };
 
