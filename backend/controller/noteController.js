@@ -19,6 +19,7 @@ noteController.createNote = (req, res) => {
         generated_content,
         difficulty_level,
         (err, noteId) => {
+            console.log("Note creation callback:", { err, noteId });
 
             if (err) {
                 console.error(err);
@@ -35,8 +36,10 @@ noteController.createNote = (req, res) => {
             });
         }
     );
-};
 
+    // ❌ DELETE THIS
+    // console.log("Note creation callback:", { err, noteId });
+};
 // Get All Notes
 noteController.getAllNotes = (req, res) => {
 
