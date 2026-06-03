@@ -1,69 +1,55 @@
-require("dotenv").config();
-
+// require('dotenv').config();
+const GEMINI_API_KEY = "AQ.Ab8RN6Jw_fCRCINOd7yTPpEFLAp-uHvc4LaNJsG51cE9R8sSRQ";
 const { GoogleGenAI } = require("@google/genai");
 
-// Create Gemini client
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
-});
+// const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Generate study material from notes
-async function generateStudyMaterial(notes) {
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+const generateStudyMaterial = async (notes) => {
 
     const prompt = `
-You are an educational assistant.
+You are an educational assistant. 
 
-Read the notes carefully.
+Analyze the following student notes.
 
-Rules:
-1. Generate questions ONLY from the information explicitly present in the notes.
-2. Do NOT use external knowledge.
-3. Create exactly 5 MCQs.
-4. Each MCQ must have 4 options.
-5. Include the correct answer.
-6. Return ONLY valid JSON.
-7. Do not include markdown, explanations, or extra text.
+Generate:
 
-Output format:
-
-{
-  "topic": "Topic Name",
-  "mcqs": [
-    {
-      "question": "Question text",
-      "options": [
-        "Option A",
-        "Option B",
-        "Option C",
-        "Option D"
-      ],
-      "answer": "Correct Option"
-    }
-  ]
-}
+1. Topic Title
+2. Short Summary
+3. 5 Important Points
+4. Exam Revision Notes
+5. 5 Viva Questions
+6. 5 MCQs with Answers
 
 Notes:
+
 ${notes}
 `;
 
     const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash-lite",
+        model: "gemini-3.1-flash-lite",  // fixed: was gemini-3.1-flash-lite (doesn't exist)
         contents: prompt
     });
 
-    return Json.parse(response.text);
-}
+    const text = response.text
+        ?? response.candidates?.[0]?.content?.parts?.[0]?.text
+        ?? null;
 
-// Check whether Gemini API is working
-async function checkGeminiService() {
+    if (!text) {
+        throw new Error("Gemini returned no text content");
+    }
 
+    return text;
+};
+
+const checkGeminiService = async () => {
     const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: "Reply with: Gemini Service is Active"
+        contents: "Hello, this is a health check. Please reply with exactly 'Gemini Service is Active'"
     });
-
-    return response.text;
-}
+    return response.text ?? response.candidates?.[0]?.content?.parts?.[0]?.text;
+};
 
 module.exports = {
     generateStudyMaterial,

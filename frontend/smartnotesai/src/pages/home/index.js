@@ -10,10 +10,7 @@ function App() {
   // When state changes, React automatically re-renders the component.
 
   const [notes, setNotes] = useState("");         // What the user types in the textarea
-  const [result, setResult] = useState("");       // The AI-generated study material
-  const [quiz, setQuiz] = useState(null);
-  const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(0);       // The AI-generated study material
+  const [result, setResult] = useState("");        // The AI-generated study material
   const [loading, setLoading] = useState(false);  // true = show loading spinner, false = normal
   const [history, setHistory] = useState([]);      // List of all saved notes from the database
   const [activeId, setActiveId] = useState(null); // The ID of the note currently being viewed
@@ -65,9 +62,7 @@ function App() {
       });
 
       // Store the AI response so it shows up on screen
-      setQuiz(response.data.data);
-      setAnswers({});
-      setScore(0);
+      setResult(response.data.data);
 
     } catch (error) {
       console.error("Generation failed:", error);
@@ -95,7 +90,7 @@ function App() {
 
       // Build the object we want to send to the API
       const payload = {
-        title: notes.substring(0, 15) + (notes.length > 15 ? "..." : ""), // First 15 chars as title
+        title: notes.substring(0, 25) + (notes.length > 25 ? "..." : ""), // First 25 chars as title
         original_notes: notes,
         generated_content: result,
         difficulty_level: "college",
@@ -177,23 +172,6 @@ function App() {
       alert("Failed to delete note.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const selectAnswer = (questionIndex, selectedOption) => {
-
-    if (answers[questionIndex]) return;
-
-    const correct =
-      quiz.mcqs[questionIndex].answer === selectedOption;
-
-    setAnswers((prev) => ({
-      ...prev,
-      [questionIndex]: selectedOption,
-    }));
-
-    if (correct) {
-      setScore((prev) => prev + 1);
     }
   };
 
@@ -331,75 +309,7 @@ function App() {
                 <div className="result-badge">✦ AI Generated</div>
               </div>
               {/* pre tag preserves line breaks and spacing from the AI response */}
-              {quiz && (
-                <div className="quiz-container">
-
-                  <h2>{quiz.topic}</h2>
-
-                  {quiz.mcqs.map((mcq, index) => (
-                    <div key={index} className="question-card">
-
-                      <h3>
-                        {index + 1}. {mcq.question}
-                      </h3>
-
-                      {mcq.options.map((option, optionIndex) => {
-
-                        const selected =
-                          answers[index] === option;
-
-                        const isCorrect =
-                          option === mcq.answer;
-
-                        return (
-                          <button
-                            key={optionIndex}
-                            className={`option-btn
-                              ${
-                                selected && isCorrect
-                                  ? "correct"
-                                  : ""
-                              }
-                              ${
-                                selected && !isCorrect
-                                  ? "wrong"
-                                  : ""
-                              }
-                            `}
-                            onClick={() =>
-                              selectAnswer(index, option)
-                            }
-                          >
-                            {option}
-                          </button>
-                        );
-                      })}
-
-                      {answers[index] && (
-                        <div className="answer-result">
-
-                          {answers[index] === mcq.answer ? (
-                            <p>✅ Correct</p>
-                          ) : (
-                            <p>
-                              ❌ Wrong <br />
-                              Correct Answer:
-                              <strong> {mcq.answer}</strong>
-                            </p>
-                          )}
-
-                        </div>
-                      )}
-
-                    </div>
-                  ))}
-
-                  <div className="score-card">
-                    Score: {score} / {quiz.mcqs.length}
-                  </div>
-
-                </div>
-              )}
+              <pre className="result-content">{result}</pre>
             </div>
           )}
 
