@@ -4,7 +4,6 @@ require('dotenv').config();
 const { GoogleGenAI } = require("@google/genai");
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-// GEMINI_API_KEY="AIzaSyDibXokauWWsTFJ5tsnUX9YnO7f3NUHtGY";
 
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
