@@ -7,7 +7,7 @@ noteController.createNote = (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to create note' });
         }
-        res.status(201).json({ message: 'Note created', noteId });
+        res.status(201||200).json({ message: 'Note created', noteId });
     });
 };
 
