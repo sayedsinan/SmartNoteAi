@@ -43,7 +43,7 @@ const checkGeminiService = async () => {
         model: "gemini-2.5-flash",
         contents: "Hello, this is a health check. Please reply with exactly 'Gemini Service is Active'"
     });
-    return response.text;
+    return response.text; 
 };
 
 module.exports = {
