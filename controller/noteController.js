@@ -1,4 +1,5 @@
 const noteService = require('../services/noteService');
+const geminiService = require('../services/geminiService');
 const noteController = {};
 
 noteController.createNote = (req, res) => {
@@ -47,4 +48,31 @@ noteController.updateNote = (req, res) => {
     });
 };
 
+noteController.generateNote = (req, res) => {
+     try {
+        const { notes } = req.body;
+
+        if (!notes) {
+            return res.status(400).json({
+                success: false,
+                message: "Notes are required"
+            });
+        }
+
+        const result =  geminiService.generateStudyMaterial(notes);
+
+        res.status(200).json({
+            success: true,
+            data: result
+        });
+
+    } catch (error) {
+        console.error("Generate Study Material Error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 module.exports = noteController;

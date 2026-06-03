@@ -3,6 +3,7 @@ const db = require('mysql2');
 const conntection = db.createConnection({
     host: 'localhost',
     user: 'root',
+    password: 'root',
     database: 'smart_notes'
 });
 
