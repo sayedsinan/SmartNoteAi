@@ -1,11 +1,10 @@
 require('dotenv').config();
 
-
 const { GoogleGenAI } = require("@google/genai");
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const generateStudyMaterial = async (notes) => {
 
@@ -29,12 +28,19 @@ ${notes}
 `;
 
     const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-lite",
+        model: "gemini-2.0-flash-lite",  // fixed: was gemini-3.1-flash-lite (doesn't exist)
         contents: prompt
     });
-    console.log("RESULT:", response);
-console.log("TYPE:", typeof response);
-    return response.text;
+
+    const text = response.text
+        ?? response.candidates?.[0]?.content?.parts?.[0]?.text
+        ?? null;
+
+    if (!text) {
+        throw new Error("Gemini returned no text content");
+    }
+
+    return text;
 };
 
 const checkGeminiService = async () => {
@@ -42,7 +48,7 @@ const checkGeminiService = async () => {
         model: "gemini-2.5-flash",
         contents: "Hello, this is a health check. Please reply with exactly 'Gemini Service is Active'"
     });
-    return response.text; 
+    return response.text ?? response.candidates?.[0]?.content?.parts?.[0]?.text;
 };
 
 module.exports = {

@@ -1,15 +1,26 @@
-const noteService = require('../services/noteService');
-const geminiService = require('../services/geminiService');
+const noteService = require('../backend/services/noteService');
+const geminiService = require('../backend/services/geminiService');
+const axios = require('axios');
+
 const noteController = {};
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+
 noteController.createNote = (req, res) => {
-    const { title, content } = req.body;
-    noteService.createNote(title, content, (err, noteId) => {
-        if (err) {
-            return res.status(500).json({ error: 'Failed to create note' });
+    const { title, content, generated_content, difficulty_level } = req.body;
+
+    noteService.createNote(
+        title,
+        content,
+        generated_content ?? null,
+        difficulty_level ?? 'medium',
+        (err, noteId) => {
+            if (err) {
+                return res.status(500).json({ error: 'Failed to create note' });
+            }
+            res.status(201).json({ message: 'Note created', noteId });
         }
-        res.status(201||200).json({ message: 'Note created', noteId });
-    });
+    );
 };
 
 noteController.getAllNotes = (req, res) => {
@@ -47,7 +58,8 @@ noteController.updateNote = (req, res) => {
         res.json({ message: 'Note updated' });
     });
 };
-noteController.deleteNote = (req, res) => {   
+
+noteController.deleteNote = (req, res) => {
     const { id } = req.params;
     noteService.deleteNote(id, (err, affectedRows) => {
         if (err) {
@@ -58,7 +70,9 @@ noteController.deleteNote = (req, res) => {
         }
         res.json({ message: 'Note deleted' });
     });
-};noteController.generateNote = async (req, res) => {
+};
+
+noteController.generateNote = async (req, res) => {
     try {
         const { notes } = req.body;
 
@@ -69,31 +83,26 @@ noteController.deleteNote = (req, res) => {
             });
         }
 
-        // Generate study material
+        // Step 1: Generate study material via Gemini
         const generatedContent = await geminiService.generateStudyMaterial(notes);
 
-        // Save generated content as a note
-        const title = "AI Generated Study Material";
+        // Step 2: Save via internal API call to createNote endpoint
+        const internalRes = await axios.post(`${BASE_URL}/api/notes`, {
+            title: "AI Generated Study Material",
+            content: notes,
+            generated_content: generatedContent,
+            difficulty_level: 'medium'
+        });
 
-        noteService.createNote(title, generatedContent, (err, noteId) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: "Failed to save generated note"
-                });
-            }
-
-            res.status(200).json({
-                success: true,
-                message: "Study material generated and saved successfully",
-                noteId,
-                data: generatedContent
-            });
+        res.status(200).json({
+            success: true,
+            message: "Study material generated and saved successfully",
+            noteId: internalRes.data.noteId,
+            data: generatedContent
         });
 
     } catch (error) {
         console.error("Generate Study Material Error:", error);
-
         res.status(500).json({
             success: false,
             message: error.message

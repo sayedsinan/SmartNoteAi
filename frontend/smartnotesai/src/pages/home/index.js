@@ -16,7 +16,7 @@ function App() {
       setLoading(true);
 
       const response = await axios.post(
-        "https://acela.proxy.rlwy.net:10774/api/generate",
+        "http://localhost:3000/api/generate",
         { notes }
       );
 

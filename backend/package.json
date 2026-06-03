@@ -14,10 +14,12 @@
   "type": "commonjs",
   "dependencies": {
     "@google/genai": "^2.7.0",
+    "axios": "^1.17.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "genai": "^0.0.18",
+    "mysql": "^2.18.1",
     "mysql2": "^3.22.4",
     "nodemon": "^3.1.14"
   }
