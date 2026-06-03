@@ -41,3 +41,12 @@ noteService.updateNote = (id, title, content, callback) => {
         callback(null, result.affectedRows);
     });
  }
+ noteService.deleteNote = (id, callback) => {
+    const query = 'DELETE FROM notes WHERE id = ?';
+    db.query(query, [id], (err, result) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null, result.affectedRows);
+    });
+};

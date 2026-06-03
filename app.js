@@ -8,18 +8,7 @@ app.use(express.json());
 
 require('./database/db');
 
-// Routes
-const noteRoutes = require('./route/notesRouter');
-app.use('/api', noteRoutes);
-
-// Health Check
-app.get('/', (req, res) => {
-    res.json({
-        success: true,
-        message: 'Server Running'
-    });
-});
-
+app.use('/api', require('./route/notesRouter'));
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
