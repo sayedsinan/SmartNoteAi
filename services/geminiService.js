@@ -11,7 +11,7 @@ const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 const generateStudyMaterial = async (notes) => {
 
     const prompt = `
-You are an educational assistant.
+You are an educational assistant. 
 
 Analyze the following student notes.
 
