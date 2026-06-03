@@ -4,7 +4,6 @@ require('dotenv').config();
 const { GoogleGenAI } = require("@google/genai");
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-// GEMINI_API_KEY="AIzaSyDibXokauWWsTFJ5tsnUX9YnO7f3NUHtGY";
 
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
 
@@ -43,7 +42,7 @@ const checkGeminiService = async () => {
         model: "gemini-2.5-flash",
         contents: "Hello, this is a health check. Please reply with exactly 'Gemini Service is Active'"
     });
-    return response.text;
+    return response.text; 
 };
 
 module.exports = {
