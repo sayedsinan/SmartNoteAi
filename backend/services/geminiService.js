@@ -1,5 +1,5 @@
 // require('dotenv').config();
-const GEMINI_API_KEY = "AQ.Ab8RN6Jw_fCRCINOd7yTPpEFLAp-uHvc4LaNJsG51cE9R8sSRQ";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const { GoogleGenAI } = require("@google/genai");
 
 // const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -24,11 +24,12 @@ Generate:
 
 Notes:
 
+
 ${notes}
 `;
 
     const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-lite",  // fixed: was gemini-3.1-flash-lite (doesn't exist)
+        model: "gemini-2.5-flash",
         contents: prompt
     });
 
