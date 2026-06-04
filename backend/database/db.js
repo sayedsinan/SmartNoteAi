@@ -1,9 +1,11 @@
 const db = require('mysql2');
 
 const conntection = db.createConnection({
-    host: 'localhost',
+    host: 'acela.proxy.rlwy.net',
+    port: 10774,
     user: 'root',
-    database: 'smart_notes'
+    password: 'GlSYKtkoiCyAQpKxLNyzYNrpQuYuylge',
+    database: 'railway'
 });
 
 conntection.connect((err)=>{
